@@ -4,7 +4,8 @@ const parseCommand = require('./parse-command');
 const Raid = require('./Raid');
 
 const zufus = new Discord.Client();
-const API_TOKEN = require('fs').readFileSync('./API_TOKEN', 'utf8');
+const API_TOKEN = require('fs').readFileSync('./API_TOKEN', 'utf8').trim();
+
 const handlers = {
   register: handleRegister,
   unregister: handleUnregister,
