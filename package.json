@@ -1,0 +1,15 @@
+{
+  "name": "zufus",
+  "version": "1.0.0",
+  "description": "Warfame Discord bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Seth Kinast <seth@kina.st>",
+  "license": "ISC",
+  "dependencies": {
+    "chrono-node": "^1.2.3",
+    "discord.js": "^7.0.1"
+  }
+}
