@@ -15,15 +15,15 @@ module.exports = class Raid {
 
   register(user) {
     if (this.leader.id === user.id || this.players.some(player => player.id === user.id)) {
-      return `${user} you're already registered for this raid.`;
+      return `Maybe you should have a cone on your head too, ${user}.  You're already registered for this raid!`;
     }
 
     this.players.push(user);
 
     if (this.players.length <= NUM_RAIDERS) {
-      return `${user} OK, you're registered for the raid.`;
+      return `${user} is now registered for ${this.leader.name}'s raid.  Please show up 10 minutes before the start time to ensure your spot.`;
     } else {
-      return `${user} the raid is full but you are on standby.`;
+      return `${user} the raid is full but you are on standby.  Personally, I like to chase my tail a little while I wait.`;
     }
   }
 
@@ -31,18 +31,18 @@ module.exports = class Raid {
     let position = this.players.findIndex(player => player.id === user.id);
     if (position !== -1) {
       this.players.splice(position, 1);
-      return `${user} you're no longer signed up for this raid.`;
+      return `Way to be a quitter, ${user}.  You're no longer signed up for this raid.`;
     }
-    return `${user} you don't seem to be signed up for this raid anyways.`;
+    return `You're even bad at quitting, ${user}; you're not even signed up for this raid.`;
   }
 
   unregisterByName(username) {
     let position = this.players.findIndex(player => player.name === username);
     if (position !== -1) {
       this.players.splice(position, 1);
-      return `${username} has been removed from the raid.`;
+      return `I just 86'd ${username} from the raid.`;
     }
-    return `${username} is not signed up for this raid.`;
+    return `At least I'm hourly... ${username} wasn't signed up anyway.`;
   }
 
   toString() {
