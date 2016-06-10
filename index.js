@@ -3,7 +3,9 @@ const Discord = require('discord.js');
 const parseCommand = require('./parse-command');
 const Raid = require('./Raid');
 
-const zufus = new Discord.Client();
+const zufus = new Discord.Client({
+  autoReconnect: true
+});
 const API_TOKEN = require('fs').readFileSync('./API_TOKEN', 'utf8').trim();
 
 const handlers = {
