@@ -11,11 +11,10 @@
   "license": "ISC",
   "dependencies": {
     "chrono-node": "^1.2.3",
-    "discord.js": "^7.0.1"
+    "discord.js": "^7.0.1",
+    "requiredir": "^1.0.7"
   },
   "devDependencies": {
-    "eslint": "^2.11.1",
-    "eslint-config-airbnb": "^9.0.1",
-    "eslint-plugin-react": "^5.1.1"
+    "eslint": "^2.11.1"
   }
 }

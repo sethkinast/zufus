@@ -1,28 +1,14 @@
 const Discord = require('discord.js');
+const CommandSet = require('./src/CommandSet.js');
 
-const parseCommand = require('./parse-command');
-const Raid = require('./Raid');
-
+const API_TOKEN = require('fs').readFileSync('./API_TOKEN', 'utf8').trim();
 const zufus = new Discord.Client({
   autoReconnect: true
 });
-const API_TOKEN = require('fs').readFileSync('./API_TOKEN', 'utf8').trim();
 
-const handlers = {
-  register: handleRegister,
-  unregister: handleUnregister,
-  start: handleStart,
-  cancel: handleCancel,
-  help: handleHelp,
-  info: handleInfo,
-  pls: handlePls,
-  plz: handlePls
-};
+const commands = new CommandSet('commands');
 
-const DEFAULT_START_TIME = '8:30pm';
-
-let currentRaid;
-
+/*
 function handleRegister(user) {
   if (!currentRaid || currentRaid.complete) {
     return `${user} no raid to register for right now :(`;
@@ -38,53 +24,11 @@ function handleUnregister(user, args) {
     return `${user} no raid to remove you from-- you're free`;
   }
   return currentRaid.unregister(user);
-}
+}*/
 
-function handleStart(user, args) {
-  let timeish = args.join(' ') || DEFAULT_START_TIME;
-  if (isAdmin(user)) {
-    currentRaid = new Raid(user, timeish);
-    return currentRaid.toString();
-  }
-}
-
-function handleCancel() {
-  currentRaid = undefined;
-  return 'The raid has been cancelled :(';
-}
-
-function handleInfo() {
-  if (currentRaid) {
-    return currentRaid.toString();
-  }
-  return 'No raid is scheduled at the moment.';
-}
-
-function handleHelp() {
-  return [
-    '`register` - Sign up for the next raid',
-    '`unregister` - Cancel your signup',
-    '`info` - Show details for the next raid'
-  ];
-}
-
-function handlePls(user) {
-  return `${user} (⌐■_■) deal with it`;
-}
-
-function isAdmin(user) {
-  return zufus.servers[0].rolesOfUser(user).some(role => role.name === 'Admin');
-}
-
-zufus.on('message', function(message) {
-  const { command, args } = parseCommand(message);
-  const handler = handlers[command];
-  if (handler) {
-    const ret = handler(message.author, args);
-    if (ret) {
-      zufus.sendMessage(message, ret);
-    }
+zufus.on('message', message => {
+  if (!message.author.equals(zufus.user)) {
+    commands.executeCommandForMessage(message);
   }
 });
-
 zufus.loginWithToken(API_TOKEN);

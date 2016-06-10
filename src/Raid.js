@@ -13,17 +13,21 @@ module.exports = class Raid {
     return chrono.parseDate(timeish);
   }
 
+  get complete() {
+    return this.time < Date.now();
+  }
+
   register(user) {
     if (this.leader.id === user.id || this.players.some(player => player.id === user.id)) {
-      return `Maybe you should have a cone on your head too, ${user}.  You're already registered for this raid!`;
+      return `Maybe you should have a cone on your head too, ${user}. You're already registered for this raid!`;
     }
 
     this.players.push(user);
 
     if (this.players.length <= NUM_RAIDERS) {
-      return `${user} is now registered for ${this.leader.name}'s raid.  Please show up 10 minutes before the start time to ensure your spot.`;
+      return `You're now registered for ${this.leader.name}'s raid. Please show up 10 minutes before the start time to ensure your spot.`;
     } else {
-      return `${user} the raid is full but you are on standby.  Personally, I like to chase my tail a little while I wait.`;
+      return 'The raid is full but you are on standby. Personally, I like to chase my tail a little while I wait.';
     }
   }
 
@@ -31,7 +35,7 @@ module.exports = class Raid {
     let position = this.players.findIndex(player => player.id === user.id);
     if (position !== -1) {
       this.players.splice(position, 1);
-      return `Way to be a quitter, ${user}.  You're no longer signed up for this raid.`;
+      return `Way to be a quitter, ${user}. You're no longer signed up for this raid.`;
     }
     return `You're even bad at quitting, ${user}; you're not even signed up for this raid.`;
   }
@@ -47,13 +51,21 @@ module.exports = class Raid {
 
   toString() {
     let res = [`The next raid is **${this.time}**`, `**Leader:** ${this.leader.name}`];
-    return res.concat(this.getRegistered());
+    return res.concat(this.getRegisteredString());
   }
 
-  getRegistered() {
+  getPlayers() {
+    return this.players.slice(0, NUM_RAIDERS);
+  }
+
+  getStandby() {
+    return this.players.slice(NUM_RAIDERS);
+  }
+
+  getRegisteredString() {
     let res = [];
-    let players = this.players.slice(0, NUM_RAIDERS);
-    let standby = this.players.slice(NUM_RAIDERS);
+    let players = this.getPlayers();
+    let standby = this.getStandby();
     if (players.length) {
       res.push(`**Registered:** ${players.map(player => player.name).join(', ')}`);
     }
@@ -62,4 +74,5 @@ module.exports = class Raid {
     }
     return res;
   }
+
 };
