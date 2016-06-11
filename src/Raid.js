@@ -1,4 +1,5 @@
 const chrono = require('chrono-node');
+const Duration = require('duration');
 
 const NUM_RAIDERS = 7; // plus RL
 
@@ -10,7 +11,11 @@ module.exports = class Raid {
   }
 
   static parseTimeish(timeish) {
-    return chrono.parseDate(timeish);
+    let parsed = chrono.parseDate(timeish, new Date(), { forwardDatesOnly: true });
+    if (parsed < Date.now()) {
+      parsed = Raid.parseTimeish(`tomorrow ${timeish}`);
+    }
+    return parsed;
   }
 
   get complete() {
@@ -50,7 +55,9 @@ module.exports = class Raid {
   }
 
   toString() {
-    let res = [`The next raid is **${this.time}**`, `**Leader:** ${this.leader.name}`];
+    let time = this.time;
+    let timeUntil = new Duration(new Date(), this.time).toString(1, 2);
+    let res = [`The next raid is **${time}** (starts in ${timeUntil})`, `**Leader:** ${this.leader.name}`];
     return res.concat(this.getRegisteredString());
   }
 
